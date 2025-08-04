@@ -280,7 +280,8 @@ loadStudents();
     });
 
     // 📤 Submit attendance
-    document.getElementById('submit-btn').addEventListener('click', async () => {
+    
+   document.getElementById('submit-btn').addEventListener('click', async () => {
       const month = document.getElementById('month-select').value;
       const day = document.getElementById('day-select').value;
       const statusDiv = document.getElementById('status');
@@ -303,7 +304,7 @@ loadStudents();
       const payload = { month, day, attendance };
 
       try {
-        await fetch("https://script.google.com/macros/s/AKfycbzaOd6-v4oMaO9PMzy4tfBiqbYFB7BNT6OeVt2gCzulxXUqECQCQWWfseVjTGiu_AAq/exec", {
+        await fetch("https://script.google.com/macros/s/AKfycbyhIPCbyjwv8KNwDm7xFl1flkQxlUz8ZxTZMXhaal3E4ViOcGRr8rXtFGgcgpqfFswJ/exec", {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "application/json" },
@@ -312,7 +313,6 @@ loadStudents();
 
         statusDiv.textContent = "✅ Submitted successfully!";
         statusDiv.style.color = "green";
-      
       } catch (err) {
         statusDiv.textContent = "❌ Submission failed.";
         statusDiv.style.color = "red";
