@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Moul&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Battambang&family=Moul&display=swap" rel="stylesheet">
+  <title>Monthly Attendance</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #d1d1d1;
+      padding: 20px;
+      
+      
+    }
+
+    .container {
+      max-width: 800px;
+     
+      margin: auto;
+       margin-bottom: 0px;
+      background: rgb(196, 196, 196);
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      font-family: "Battambang", system-ui;
+    }
+
+    .header {
+        
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      background: rgb(191, 189, 189);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+       font-family: "Segoe UI", sans-serif,  "Moul";
+      font-weight: 100;
+     font-style: normal;
+     
+     
+    }
+
+    .header h2 {
+        margin-top: -5px;
+      margin-bottom: 10px;
+      text-align: center;
+     font-size: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+        
+    }
+
+    select, input[type="text"] {
+      width: 90%;
+      padding: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-family: "Battambang", system-ui;
+     font-size: 0.8rem;
+      text-align: center;
+      max-height: max-content;
+      background-color: #dbdbdb;
+      font-weight: bold;
+    }
+#month-select{
+    font-size: 0.86rem;
+}
+    .search-box input {
+      margin-top: 5px;
+      margin-bottom: -5px;
+    }
+
+    #student-list {
+      overflow-y: auto;
+      flex: 1;
+      padding: 15px;
+       
+    }
+
+    .student {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 6px;
+      
+    }
+
+    .student span {
+      flex: 1;
+    }
+
+    .student label {
+      margin-left: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .footer {
+      padding: 15px;
+      background: rgb(197, 197, 197);
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+      border-top: 1px solid #ccc;
+    }
+
+   .buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1rem;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease;
+       font-family: "Battambang", system-ui;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn.clear {
+      background: linear-gradient(to right, #717d80, #a48c7f);
+    }
+
+    .btn.submit {
+      background: linear-gradient(to right, #02a8d6, #0467e0);
+    }
+
+    .row-selects {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+
+}
+
+.row-selects select {
+  width: 48%;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+
+    #status {
+      text-align: center;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>អវត្តមានថ្នាក់ទី៧A</h2>
+      <form id="attendance-form">
+      <div class="form-group row-selects">
+         <!-- <label for="month-select">Select Month</label> -->
+          <select id="month-select" required>
+            <option value="">Select Month </option>
+            <option value="November">វិច្ឆិកា 2025</option>
+            <option value="December">ធ្នូ​ 2025</option>
+            <option value="January">មករា 2026</option>
+            <option value="February">កុម្ភៈ 2026</option>
+            <option value="March">មីនា 2026</option>
+            <option value="April">មេសា 2026</option>
+            <option value="May">ឧសភា 2026</option>
+            <option value="June">មិថុនា 2026</option>
+            <option value="July">កក្កដា 2026</option>
+            <option value="August">សីហា 2026</option>
+            
+          </select>
+         
+        
+     <!--   <label for="day-select">Select Day:</label> -->
+          <select id="day-select" required>
+            <option value="">Select Day</option>
+            <script>
+              for (let i = 1; i <= 31; i++) {
+                document.write(`<option value="day${i}">Day ${i}</option>`);
+              }
+            </script>
+          </select>
+        </div>
+
+        <div class="form-group search-box">
+      <!--<label for="student-search"></label> -->   
+          <input type="text" id="student-search" placeholder="Type to search student's name...">
+        </div>
+      </form>
+    </div>
+
+    <div id="student-list">
+      <!-- Generate 70 student entries -->
+      <script>
+       const studentList = document.getElementById('student-list');
+let allStudents = [];
+
+function loadStudents(month = "January") {
+  fetch(`https://script.google.com/macros/s/AKfycbzesiCcBW6COERqGhcSWpsd01TshO6P6oqBDJHQFX81Q7tvduWfoLynxvbbG4PD3pra/exec?month=${month}`)
+    .then(res => res.json())
+    .then(students => {
+      allStudents = students;
+      studentList.innerHTML = ""; // clear previous
+      students.forEach(name => {
+        const div = document.createElement('div');
+        div.className = 'student';
+        div.dataset.name = name.toLowerCase();
+        div.innerHTML = `
+          <span>${name}</span>
+          <label><input type="radio" name="${name}" value="P" required> P</label>
+          <label><input type="radio" name="${name}" value="A"> A</label>
+        `;
+        studentList.appendChild(div);
+      });
+       // Reapply toggle logic for radio buttons
+      applyRadioToggleFix();
+    });
+}
+
+function applyRadioToggleFix() {
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('click', function () {
+      if (this.previousChecked) {
+        this.checked = false;
+      }
+      document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
+        r.previousChecked = false;
+      });
+      this.previousChecked = this.checked;
+    });
+  });
+}
+
+document.getElementById("month-select").addEventListener("change", (e) => {
+  const month = e.target.value;
+  if (month) loadStudents(month);
+});
+
+// initial load
+loadStudents();
+      </script>
+    </div>
+
+    <div class="footer buttons">
+          <button type="reset" id="reset-btn" class="btn clear">Reset</button>
+      <button id="submit-btn" class="btn submit">Submit</button>
+      <div id="status"></div>
+    </div>
+  </div>
+
+  <script>
+    // 🔍 Live Search
+    document.getElementById('student-search').addEventListener('input', function () {
+      const keyword = this.value.toLowerCase();
+      document.querySelectorAll('.student').forEach(div => {
+        const name = div.dataset.name;
+        div.classList.toggle('hidden', !name.includes(keyword));
+      });
+    });
+
+    // 📤 Submit attendance
+    document.getElementById('submit-btn').addEventListener('click', async () => {
+      const month = document.getElementById('month-select').value;
+      const day = document.getElementById('day-select').value;
+      const statusDiv = document.getElementById('status');
+
+      if (!month || !day) {
+        statusDiv.textContent = "❌ Please select both month and day.";
+        statusDiv.style.color = "red";
+        return;
+      }
+
+      const attendance = {};
+      document.querySelectorAll('.student').forEach(div => {
+        const name = div.querySelector('span').innerText;
+        const selected = div.querySelector(`input[name="${name}"]:checked`);
+        if (selected) {
+          attendance[name] = selected.value;
+        }
+      });
+
+      const payload = { month, day, attendance };
+
+      try {
+        await fetch("https://script.google.com/macros/s/AKfycbzaOd6-v4oMaO9PMzy4tfBiqbYFB7BNT6OeVt2gCzulxXUqECQCQWWfseVjTGiu_AAq/exec", {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        statusDiv.textContent = "✅ Submitted successfully!";
+        statusDiv.style.color = "green";
+      
+      } catch (err) {
+        statusDiv.textContent = "❌ Submission failed.";
+        statusDiv.style.color = "red";
+      }
+    });
+    document.getElementById("reset-btn").addEventListener("click", () => {
+  // 1. Uncheck all radio buttons
+  document.querySelectorAll('input[type="radio"]').forEach(input => {
+    input.checked = false;
+    input.previousChecked = false; // reset toggle fix flag
+  });
+
+  // 2. Clear search input (if any)
+  const search = document.getElementById("student-search");
+  if (search) search.value = "";
+
+  // 3. Show all students again
+  document.querySelectorAll(".student").forEach(div => {
+    div.style.display = "flex";
+  });
+
+  // 4. Clear status message
+  document.getElementById("status").textContent = "";
+});
+
+  </script>
+  
+
+
+</body>
+</html>
