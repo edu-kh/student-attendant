@@ -10,31 +10,30 @@
   <style>
     body {
       font-family: sans-serif;
-      background:  rgb(216, 236, 253);
+      background:  #d8ecfd;
       padding: 0px;
-      
       
     }
 
     .container {
       max-width: 800px;
-     
-      margin: auto;
-       margin-bottom: 0px;
-      background: rgb(196, 196, 196);
+      margin-left: auto;
+      margin-right: auto; 
+      background: #dbecfa;
       border-radius: 10px;
       box-shadow: 0 0 10px #ccc;
       display: flex;
       flex-direction: column;
       height: 100vh;
       font-family: "Battambang", system-ui;
+       
     }
 
     .header {
-        
+       
       padding: 10px;
       border-bottom: 1px solid #ccc;
-      background: rgb(191, 189, 189);
+      background: rgb(190, 201, 208);
       position: sticky;
       top: 0;
       z-index: 10;
@@ -53,7 +52,7 @@
     }
 
     .form-group {
-      margin-bottom: 10px;
+      margin-bottom: 5px;
         
     }
 
@@ -89,7 +88,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #777777;
       padding-bottom: 6px;
       
     }
@@ -108,7 +107,7 @@
 
     .footer {
       padding: 15px;
-      background: rgb(197, 197, 197);
+      background: #dbecfa;
       position: sticky;
       bottom: 0;
       z-index: 10;
@@ -178,7 +177,7 @@
       <div class="form-group row-selects">
          <!-- <label for="month-select">Select Month</label> -->
           <select id="month-select" required>
-            <option value="">Select Month </option>
+            <option value="">ជ្រើសខែ</option>
             <option value="November">វិច្ឆិកា 2025</option>
             <option value="December">ធ្នូ​ 2025</option>
             <option value="January">មករា 2026</option>
@@ -195,10 +194,10 @@
         
      <!--   <label for="day-select">Select Day:</label> -->
           <select id="day-select" required>
-            <option value="">Select Day</option>
+            <option value="">ជ្រើសថ្ងៃ</option>
             <script>
               for (let i = 1; i <= 31; i++) {
-                document.write(`<option value="day${i}">Day ${i}</option>`);
+                document.write(`<option value="day${i}">ថ្ងៃទី ${i}</option>`);
               }
             </script>
           </select>
@@ -206,7 +205,7 @@
 
         <div class="form-group search-box">
       <!--<label for="student-search"></label> -->   
-          <input type="text" id="student-search" placeholder="Type to search student's name...">
+          <input type="text" id="student-search" placeholder="Search student's name...">
         </div>
       </form>
     </div>
@@ -345,4 +344,3 @@ loadStudents();
 
 </body>
 </html>
-
