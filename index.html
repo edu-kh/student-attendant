@@ -10,7 +10,7 @@
   <style>
     :root {
       --primary: #1976d2;
-      --light: #f9f9f9;
+      --light: rgb(216, 236, 253);
       --text: #333;
     }
 
@@ -89,7 +89,7 @@
       align-items: center;
       padding: 8px 10px;
       border-bottom: 1px solid #bbb;
-      background: #eeeeee;
+      background: #f1f1f1c2;
       border-radius: 6px;
       margin-bottom: 6px;
       font-family: "Battambang", system-ui;
@@ -105,7 +105,7 @@
     }
   #search{
     font-family: "Battambang", system-ui;
-    background-color: #eeeeee;
+    background-color: #f1f1f1c2;
     
   }
 
@@ -116,7 +116,7 @@ textarea::placeholder {
 }
   
   #dateInput{
-    background-color: #eeeeee;
+    background-color: #f1f1f1c2;
       border-radius: 6px;
   }
     .radio-group input[type="radio"] {
@@ -141,7 +141,9 @@ textarea::placeholder {
     #resetBtn {
       background: gray;
     }
-
+    button:hover {
+      transform: translateY(-2px);
+    }
    @media (max-width: 600px) {
   .student-row {
     flex-direction: row;         /* 🟢 Make it stay in row layout */
@@ -270,7 +272,7 @@ textarea::placeholder {
       });
 
       if (count === 0) {
-        alert('សូមជ្រើសវត្តមានសិន!');
+        alert('សូមជ្រើសអវត្តមានសិន!');
         return;
       }
 
