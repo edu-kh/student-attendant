@@ -6,6 +6,7 @@
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Moul&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Battambang&family=Moul&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>Student Attendance</title>
   <style>
     :root {
@@ -50,7 +51,7 @@
       bottom: 0;
       border-top: 1px solid #ccc;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       gap: 10px;
     }
 
@@ -124,22 +125,37 @@ textarea::placeholder {
     }
 
     .footer button {
-      flex: 1;
-      padding: 14px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 10px;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    text-align: center;
+    padding-top: 20px;
+    padding-left: 20px;
+    margin-bottom: 5px;
+    display: flex;
+  border-radius: 50%;              /* makes it a circle */
+  width: 60px;
+  height: 60px;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  box-shadow: 0 4px #2e7d32;       /* 3D shadow */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+}
+
+button:active {
+  box-shadow: 0 2px #2e7d32;
+  transform: translateY(2px);      /* pressed down effect */
+}
+    
 
     #submitBtn {
-      background: var(--primary);
+     background: linear-gradient(to bottom, #276529, #296d2b); /* green 3D effect */
+     margin-left: 10px;
     }
 
     #resetBtn {
-      background: gray;
+     background: linear-gradient(to bottom, #92836f, #605d48); /* green 3D effect */
+     margin-right: 10px;
     }
     button:hover {
       transform: translateY(-2px);
@@ -151,7 +167,10 @@ textarea::placeholder {
     align-items: center;
     padding: 6px 10px;
   }
-
+.fa-regular{
+  display: flex;
+  
+}
   .student-name {
     margin: 0;
     padding: 0;
@@ -172,7 +191,7 @@ textarea::placeholder {
 <body>
   <div class="container">
     <div class="header">
-      <h2>សម្រង់អវត្តមានថ្នាក់ទី៧B</h2>
+      <h2>សម្រង់អវត្តមានថ្នាក់ទី៧B👨‍💻</h2>
       <div class="controls">
         <input type="date" id="dateInput" />
         <input type="text" id="search" placeholder="ស្វែងរកឈ្មោះសិស្ស..." oninput="filterStudents()" />
@@ -182,8 +201,8 @@ textarea::placeholder {
     <div id="student-list" class="content"></div>
 
     <div class="footer">
-      <button id="resetBtn" onclick="resetForm()">Reset</button>
-      <button id="submitBtn" onclick="submitForm()">Submit</button>
+      <button id="resetBtn" onclick="resetForm()"><i class="fa-solid fa-arrows-rotate"></i></button>
+      <button id="submitBtn" onclick="submitForm()"><i class="fa-regular fa-paper-plane"></i></button>
     </div>
   </div>
 
