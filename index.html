@@ -67,6 +67,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+     
     }
 
     .controls input {
@@ -74,6 +75,7 @@
       font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
+       
     }
 
     .content {
@@ -124,7 +126,7 @@ textarea::placeholder {
       accent-color: var(--primary);
     }
 
-    .footer button {
+    .footer  button {
     text-align: center;
     padding-top: 20px;
     padding-left: 20px;
@@ -142,6 +144,19 @@ textarea::placeholder {
   
 }
 
+.scorebtn{
+margin-left: 5px;
+ align-items: end;
+   border-radius: 15px;
+   padding: 8px 6px;
+   background: linear-gradient(to bottom, #276529, #296d2b); /* green 3D effect */
+    font-family: "Battambang", system-ui;
+    font-size: 0.9rem;
+}
+button a{
+   color: #eaf3fc;
+  text-decoration: none;
+}
 button:active {
   box-shadow: 0 2px #2e7d32;
   transform: translateY(2px);      /* pressed down effect */
@@ -193,7 +208,8 @@ button:active {
     <div class="header">
       <h2>សម្រង់អវត្តមានថ្នាក់ទី៧B👨‍💻</h2>
       <div class="controls">
-        <input type="date" id="dateInput" />
+       <div > <input type="date" id="dateInput" />
+        <button class="scorebtn" ><a href="https://edu-kh.github.io/score/">សម្រង់ពិន្ទុ</a></button></div>
         <input type="text" id="search" placeholder="ស្វែងរកឈ្មោះសិស្ស..." oninput="filterStudents()" />
       </div>
     </div>
@@ -296,7 +312,7 @@ button:active {
       }
 
       const submitBtn = document.getElementById('submitBtn');
-     submitBtn.innerHTML = '<i class="fa-solid fa-hourglass"></i>';
+     submitBtn.innerHTML = ' <i class="fa-solid fa-hourglass"></i>';
       submitBtn.disabled = true;
 
       try {
