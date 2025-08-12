@@ -223,7 +223,7 @@ button:active {
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbytjWHpkiexQZPN8OEdCHp7c_lJWbAOpiEudXuqKY_xb7pL9vInmNCmtRvU4XJXH3tj/exec'; // Replace this with your actual URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxjcxLnOVeX4LsYq_pf7KOsJfKDsDsUkhsrL5xybBCha6HMBDGu8Pz1aDV2yF6ts9-W/exec'; // Replace this with your actual URL
     let students = [];
     let filteredStudents = [];
 
@@ -232,17 +232,26 @@ button:active {
       return date.toLocaleString('en-US', { month: 'long' }); // Ex: January
     }
 
-    async function loadStudents(date) {
-      const month = getMonthFromDate(date);
-      try {
-        const res = await fetch(`${scriptURL}?month=${month}`);
-        students = await res.json();
-        filteredStudents = [...students];
-        renderStudents();
-      } catch (e) {
-        alert('មិនអាចទាញសិស្សបានទេ');
-      }
-    }
+   async function loadStudents(date) {
+  const month = getMonthFromDate(date);
+  const container = document.getElementById('student-list');
+  
+  // Show loading message
+  container.innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div> កំពុងទាញឈ្មោះសិស្ស​ សូមរង់ចាំ...
+    </div>
+  `;
+
+  try {
+    const res = await fetch(`${scriptURL}?month=${month}`);
+    students = await res.json();
+    filteredStudents = [...students];
+    renderStudents();
+  } catch (e) {
+    container.innerHTML = '<div class="loading">❌ មិនអាចទាញសិស្សបានទេ</div>';
+  }
+}
 
     function renderStudents() {
       const container = document.getElementById('student-list');
