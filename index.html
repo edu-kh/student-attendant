@@ -358,6 +358,64 @@
   .content::-webkit-scrollbar-thumb{ background:#c9d5e2; border-radius:99px; }
 
   :focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+
+  /* ---------- Toast ---------- */
+  .toast-layer{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding: 0 16px calc(90px + env(safe-area-inset-bottom));
+    pointer-events:none;
+    z-index:50;
+  }
+
+  .toast{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    max-width:100%;
+    padding:13px 16px;
+    border-radius:var(--radius-md);
+    background:var(--ink);
+    color:#fff;
+    font-size:0.88rem;
+    box-shadow:0 12px 28px rgba(19,36,54,0.28);
+    opacity:0;
+    transform:translateY(14px) scale(0.96);
+    transition: opacity .22s ease, transform .22s ease;
+    pointer-events:auto;
+  }
+  .toast.show{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+  .toast i{
+    flex-shrink:0;
+    font-size:1rem;
+  }
+  .toast.warn i{ color:var(--gold); }
+  .toast.error i{ color:#ff8a83; }
+  .toast.success i{ color:#7fe0a8; }
+
+  /* ---------- Sending overlay ---------- */
+  .app-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(231,237,245,0.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:40;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  .app-overlay.show{
+    opacity:1;
+    pointer-events:auto;
+  }
 </style>
 </head>
 <body>
@@ -400,6 +458,10 @@
         <i class="fa-regular fa-paper-plane"></i> ដាក់ស្នើ
       </button>
     </div>
+
+    <div class="toast-layer" id="toastLayer"></div>
+
+    <div class="app-overlay" id="appOverlay"></div>
   </div>
 
 <script>
@@ -504,6 +566,30 @@
     updateProgress();
   }
 
+  function showToast(message, type = 'warn') {
+    const layer = document.getElementById('toastLayer');
+    const icons = {
+      warn: 'fa-solid fa-triangle-exclamation',
+      error: 'fa-solid fa-circle-exclamation',
+      success: 'fa-solid fa-circle-check'
+    };
+
+    const existing = layer.querySelector('.toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<i class="${icons[type] || icons.warn}"></i><span>${message}</span>`;
+    layer.appendChild(toast);
+
+    requestAnimationFrame(() => toast.classList.add('show'));
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 220);
+    }, 2400);
+  }
+
   function filterStudents() {
     const keyword = document.getElementById('search').value.toLowerCase();
     filteredStudents = students.filter(s => s.name.toLowerCase().includes(keyword));
@@ -512,7 +598,6 @@
 
   function resetForm() {
     document.getElementById('search').value = '';
-    document.getElementById('dateInput').valueAsDate = new Date();
     students.forEach(s => s.status = '');
     filteredStudents = [...students];
     renderStudents();
@@ -527,13 +612,17 @@
     const count = data.filter(d => d.status).length;
 
     if (count === 0) {
-      alert('សូមជ្រើសអវត្តមានសិន!');
+      showToast('សូមជ្រើសអវត្តមានសិន!', 'warn');
       return;
     }
 
     const submitBtn = document.getElementById('submitBtn');
     submitBtn.innerHTML = '<i class="fa-solid fa-hourglass"></i> កំពុងផ្ញើ...';
     submitBtn.disabled = true;
+    document.getElementById('resetBtn').disabled = true;
+    document.getElementById('dateInput').disabled = true;
+    document.getElementById('search').disabled = true;
+    document.getElementById('appOverlay').classList.add('show');
 
     try {
       await fetch(scriptURL, {
@@ -551,9 +640,14 @@
         submitBtn.disabled = false;
       }, 1800);
     } catch (e) {
-      alert('បញ្ជូនមិនបាន');
+      showToast('បញ្ជូនមិនបាន', 'error');
       submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> ដាក់ស្នើ';
       submitBtn.disabled = false;
+    } finally {
+      document.getElementById('resetBtn').disabled = false;
+      document.getElementById('dateInput').disabled = false;
+      document.getElementById('search').disabled = false;
+      document.getElementById('appOverlay').classList.remove('show');
     }
   }
 
