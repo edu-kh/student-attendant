@@ -60,7 +60,8 @@
     padding:18px 18px 14px;
     background: linear-gradient(155deg, var(--primary-dark), var(--primary) 65%);
     color:#eaf4f7;
-    overflow:hidden;
+    overflow:visible;
+    z-index:20;
     flex-shrink:0;
   }
 
@@ -106,6 +107,7 @@
   .field{
     position:relative;
     flex:1;
+    min-width:0;
   }
 
   .field i.leading{
@@ -139,7 +141,7 @@
     gap:6px;
     padding:0 14px;
     border-radius:var(--radius-sm);
-    background:rgba(255,255,255,0.14);
+    background:rgba(159, 214, 250, 0.14);
     border:1px solid rgba(255,255,255,0.35);
     color:#fff;
     text-decoration:none;
@@ -150,8 +152,17 @@
   .score-link:active{ transform:scale(0.96); }
   .score-link:hover{ background:rgba(255,255,255,0.24); }
 
+  .footer .score-link{
+    height:52px;
+    border-radius:99px;
+    padding:0 18px;
+    background:rgba(159, 214, 250, 0.39);
+    border:1.5px solid #dfe6ee;
+    color:var(--ink);
+  }
+  .footer .score-link:hover{ background:#bad0edcc; }
+
   #search{
-    margin-top:8px;
     width:100%;
     padding:11px 12px 11px 34px;
     border:none;
@@ -164,6 +175,84 @@
   }
   #search:focus{ box-shadow:0 0 0 3px rgba(199,154,59,0.55); }
   #search::placeholder{ color:#7c8ba0; }
+
+  /* ---------- Export Dropdowns ---------- */
+  .dropdown{
+    position:relative;
+    flex-shrink:0;
+    display:flex;
+  }
+
+  .export-btn{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    padding:0 11px;
+    border-radius:var(--radius-sm);
+    background:rgba(255,255,255,0.14);
+    border:1px solid rgba(255,255,255,0.35);
+    color:#fff;
+    font-family:inherit;
+    font-size:0.82rem;
+    font-weight:700;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .18s ease, transform .12s ease;
+  }
+  .export-btn:hover{ background:rgba(255,255,255,0.24); }
+  .export-btn:active{ transform:scale(0.96); }
+
+  .export-btn.pdf i.icon-type{ color:#ff9b95; }
+  .export-btn.excel i.icon-type{ color:#7fe0a8; }
+
+  .dropdown-menu{
+    position:absolute;
+    top:calc(100% + 6px);
+    right:0;
+    min-width:155px;
+    max-height:260px;
+    overflow-y:auto;
+    background:var(--surface);
+    border-radius:var(--radius-sm);
+    box-shadow:0 12px 28px rgba(19,36,54,0.22);
+    border:1px solid #dfe6ee;
+    padding:4px;
+    display:none;
+    z-index:100;
+  }
+  .dropdown-menu.open{
+    display:block;
+    animation:menuIn .16s ease forwards;
+  }
+  @keyframes menuIn{
+    from{ opacity:0; transform:translateY(-6px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .dropdown-item{
+    width:100%;
+    text-align:left;
+    padding:8px 12px;
+    border:none;
+    background:transparent;
+    color:var(--ink);
+    font-family:inherit;
+    font-size:0.86rem;
+    border-radius:7px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    transition:background .14s ease, color .14s ease;
+  }
+  .dropdown-item:hover{
+    background:var(--surface-soft);
+    color:var(--primary);
+  }
+  .dropdown-item span.en-month{
+    font-size:0.75rem;
+    color:var(--muted);
+  }
 
   /* progress */
   .progress-wrap{
@@ -423,7 +512,7 @@
 
     <div class="header">
       <div class="title-row">
-        <h1>សម្រង់អវត្តមានថ្នាក់ទី៧D</h1>
+        <h1>សម្រង់អវត្តមានថ្នាក់ទី៧ "I"</h1>
         <span class="badge">👨‍💻</span>
       </div>
 
@@ -432,14 +521,31 @@
           <i class="fa-regular fa-calendar leading"></i>
           <input type="date" id="dateInput" />
         </div>
-        <a class="score-link" href="https://edu-kh.github.io/score/">
+       <!--<a class="score-link" href="#">
           <i class="fa-solid fa-chart-simple"></i> សម្រង់ពិន្ទុ
         </a>
+          --> 
+
+        <div class="dropdown">
+          <button type="button" class="export-btn excel" onclick="toggleDropdown('excelMenu', event)" aria-label="នាំចេញ Excel">
+            <i class="fa-solid fa-file-excel icon-type"></i>ទាញយក Excel <i class="fa-solid fa-caret-down"></i>
+          </button>
+          <div class="dropdown-menu" id="excelMenu"></div>
+        </div>
       </div>
 
-      <div class="field" style="margin-top:8px;">
-        <i class="fa-solid fa-magnifying-glass leading"></i>
-        <input type="text" id="search" placeholder="ស្វែងរកឈ្មោះសិស្ស..." oninput="filterStudents()" />
+      <div class="row-inline" style="margin-top:8px;">
+        <div class="field">
+          <i class="fa-solid fa-magnifying-glass leading"></i>
+          <input type="text" id="search" placeholder="ស្វែងរកឈ្មោះសិស្ស..." oninput="filterStudents()" />
+        </div>
+        <div class="dropdown">
+          <button type="button" class="export-btn pdf" onclick="toggleDropdown('pdfMenu', event)" aria-label="នាំចេញ PDF">
+            <i class="fa-solid fa-file-pdf icon-type"></i>ទាញយក PDF <i class="fa-solid fa-caret-down"></i>
+          </button>
+          <div class="dropdown-menu" id="pdfMenu"></div>
+        </div>
+      
       </div>
 
       <div class="progress-wrap">
@@ -457,6 +563,9 @@
       <button id="submitBtn" class="btn btn-submit" onclick="submitForm()">
         <i class="fa-regular fa-paper-plane"></i> ដាក់ស្នើ
       </button>
+      <a class="score-link" href="https://edu-kh.github.io/score/">
+        <i class="fa-solid fa-chart-simple"></i> សម្រង់ពិន្ទុ
+      </a>
     </div>
 
     <div class="toast-layer" id="toastLayer"></div>
@@ -465,13 +574,164 @@
   </div>
 
 <script>
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbxjcxLnOVeX4LsYq_pf7KOsJfKDsDsUkhsrL5xybBCha6HMBDGu8Pz1aDV2yF6ts9-W/exec';
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbzkha6F7Z0FmKK1yYNWgitVlXhbChQxYywxUZIz0hA5iDmhxpxg_kZ12q0KEsYc098E2w/exec';
   let students = [];
   let filteredStudents = [];
 
+  const SCHOOL_MONTHS = [
+    { en: 'November', km: 'វិច្ឆិកា' },
+    { en: 'December', km: 'ធ្នូ' },
+    { en: 'January', km: 'មករា' },
+    { en: 'February', km: 'កុម្ភៈ' },
+    { en: 'March', km: 'មីនា' },
+    { en: 'April', km: 'មេសា' },
+    { en: 'May', km: 'ឧសភា' },
+    { en: 'June', km: 'មិថុនា' },
+    { en: 'July', km: 'កក្កដា' },
+    { en: 'August', km: 'សីហា' }
+  ];
+
+  function initDropdowns() {
+    const pdfMenu = document.getElementById('pdfMenu');
+    const excelMenu = document.getElementById('excelMenu');
+
+    SCHOOL_MONTHS.forEach(m => {
+      const pdfItem = document.createElement('button');
+      pdfItem.type = 'button';
+      pdfItem.className = 'dropdown-item';
+      pdfItem.innerHTML = `<span>ខែ${m.km}</span><span class="en-month">${m.en}</span>`;
+      pdfItem.onclick = () => handleExport('pdf', m);
+      pdfMenu.appendChild(pdfItem);
+
+      const excelItem = document.createElement('button');
+      excelItem.type = 'button';
+      excelItem.className = 'dropdown-item';
+      excelItem.innerHTML = `<span>ខែ${m.km}</span><span class="en-month">${m.en}</span>`;
+      excelItem.onclick = () => handleExport('excel', m);
+      excelMenu.appendChild(excelItem);
+    });
+  }
+
+  function toggleDropdown(menuId, event) {
+    event.stopPropagation();
+    const targetMenu = document.getElementById(menuId);
+    const isOpen = targetMenu.classList.contains('open');
+
+    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('open'));
+    if (!isOpen) {
+      targetMenu.classList.add('open');
+    }
+  }
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('open'));
+  });
+
+  /* ---------- Date helpers (timezone-safe) ---------- */
+  const MONTH_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const pad2 = n => String(n).padStart(2, '0');
+
+  function localToday() {
+    const d = new Date();
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
   function getMonthFromDate(dateStr) {
-    const date = new Date(dateStr);
-    return date.toLocaleString('en-US', { month: 'long' });
+    return MONTH_EN[parseInt(String(dateStr).split('-')[1], 10) - 1] || '';
+  }
+  function getDayFromDate(dateStr) {
+    return parseInt(String(dateStr).split('-')[2], 10);
+  }
+
+  /* ---------- Download helpers (all browsers) ---------- */
+  function base64ToBlob(b64, mime) {
+    const binary = atob(String(b64).replace(/\s/g, ''));
+    const len = binary.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: mime || 'application/octet-stream' });
+  }
+
+  function saveBlob(blob, filename) {
+    // Old Edge / IE
+    if (navigator.msSaveOrOpenBlob) {
+      navigator.msSaveOrOpenBlob(blob, filename);
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.rel = 'noopener';
+    a.href = url;
+
+    if (typeof a.download === 'undefined') {
+      // very old iOS/WebViews: no download attribute -> open the file instead
+      window.location.href = url;
+    } else {
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+    // keep the URL alive long enough for slow phones / big files
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  }
+
+  function isInAppBrowser() {
+    return /FBAN|FBAV|FB_IAB|Instagram|Line\/|Zalo|MicroMessenger|; wv\)/i.test(navigator.userAgent);
+  }
+
+  let exporting = false;
+
+  async function handleExport(type, monthObj) {
+    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('open'));
+    if (exporting) { showToast('កំពុងដំណើរការ សូមរង់ចាំ...', 'warn'); return; }
+    exporting = true;
+
+    const label = type === 'pdf' ? 'PDF' : 'Excel';
+    showToast('កំពុងរៀបចំទាញយក ' + label + ' ខែ' + monthObj.km + '...', 'success');
+
+    // Khmer sheet name in `month`, English as a fallback in `monthEn`
+    const exportURL = scriptURL +
+      '?action=export&format=' + encodeURIComponent(type) +
+      '&month=' + encodeURIComponent(monthObj.km) +
+      '&monthEn=' + encodeURIComponent(monthObj.en) +
+      '&_=' + Date.now();
+
+    const ctrl = ('AbortController' in window) ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), 120000) : null;
+
+    try {
+      const res = await fetch(exportURL, { redirect: 'follow', cache: 'no-store', signal: ctrl ? ctrl.signal : undefined });
+      const text = await res.text();
+
+      let file;
+      try { file = JSON.parse(text); }
+      catch (_) {
+        // Google returned an HTML page (not deployed / not authorised)
+        showToast('Script មិនទាន់ Deploy ថ្មី ឬមិនទាន់អនុញ្ញាត', 'error');
+        return;
+      }
+
+      if (!file || !file.data) {
+        showToast((file && file.error) || 'ទាញយកមិនបាន', 'error');
+        return;
+      }
+
+      const blob = base64ToBlob(file.data, file.mimeType);
+      saveBlob(blob, file.filename || ('សម្រង់អវត្តមាន_ខែ' + monthObj.km + (type === 'pdf' ? '.pdf' : '.xlsx')));
+
+      showToast(
+        isInAppBrowser()
+          ? 'បើមិនទាញយក សូមបើកក្នុង Chrome ឬ Safari'
+          : 'បានទាញយក ' + label + ' ខែ' + monthObj.km,
+        isInAppBrowser() ? 'warn' : 'success'
+      );
+    } catch (err) {
+      showToast(err && err.name === 'AbortError' ? 'ចំណាយពេលយូរពេក សូមព្យាយាមម្តងទៀត' : 'ទាញយកមិនបាន', 'error');
+    } finally {
+      if (timer) clearTimeout(timer);
+      exporting = false;
+    }
   }
 
   function initials(name) {
@@ -479,32 +739,40 @@
     return trimmed ? trimmed.charAt(0).toUpperCase() : '?';
   }
 
-  async function loadStudents(date) {
-    const month = getMonthFromDate(date);
-    const container = document.getElementById('student-list');
+ let loadToken = 0;
 
+async function loadStudents(date) {
+  const month = getMonthFromDate(date);
+  const day = getDayFromDate(date);
+  const container = document.getElementById('student-list');
+  const myToken = ++loadToken;   // ignore stale responses if the date changes quickly
+
+  container.innerHTML = `
+    <div class="state-msg">
+      <div class="spinner"></div>
+      កំពុងទាញឈ្មោះសិស្ស សូមរង់ចាំ...
+    </div>
+  `;
+
+  try {
+    const res = await fetch(`${scriptURL}?month=${encodeURIComponent(month)}&day=${day}&_=${Date.now()}`, { cache: 'no-store' });
+    const list = await res.json();
+    if (myToken !== loadToken) return;
+
+    students = list.map(s => ({ ...s, status: s.status || '' }));
+    document.getElementById('search').value = '';
+    filteredStudents = [...students];
+    renderStudents();
+  } catch (e) {
+    if (myToken !== loadToken) return;
     container.innerHTML = `
       <div class="state-msg">
-        <div class="spinner"></div>
-        កំពុងទាញឈ្មោះសិស្ស សូមរង់ចាំ...
+        <i class="fa-solid fa-circle-exclamation" style="font-size:1.6rem;color:var(--absent);"></i>
+        មិនអាចទាញសិស្សបានទេ
       </div>
     `;
-
-    try {
-      const res = await fetch(`${scriptURL}?month=${month}`);
-      students = (await res.json()).map(s => ({ ...s, status: '' }));
-      filteredStudents = [...students];
-      renderStudents();
-    } catch (e) {
-      container.innerHTML = `
-        <div class="state-msg">
-          <i class="fa-solid fa-circle-exclamation" style="font-size:1.6rem;color:var(--absent);"></i>
-          មិនអាចទាញសិស្សបានទេ
-        </div>
-      `;
-    }
   }
-
+}
   function updateProgress() {
     const total = filteredStudents.length;
     const marked = filteredStudents.filter(s => s.status).length;
@@ -596,64 +864,62 @@
     renderStudents();
   }
 
-  function resetForm() {
-    document.getElementById('search').value = '';
-    students.forEach(s => s.status = '');
-    filteredStudents = [...students];
-    renderStudents();
+ function resetForm() {
+  document.getElementById('search').value = '';
+  loadStudents(document.getElementById('dateInput').value);
+}
+
+ async function submitForm() {
+  const date = document.getElementById('dateInput').value;
+  const month = getMonthFromDate(date);
+  const day = getDayFromDate(date);
+
+  if (!students.length) {
+    showToast('មិនមានឈ្មោះសិស្ស!', 'warn');
+    return;
   }
 
-  async function submitForm() {
-    const date = document.getElementById('dateInput').value;
-    const month = getMonthFromDate(date);
-    const day = new Date(date).getDate();
+  const data = students.map(s => ({ name: s.name, status: s.status || '' }));
 
-    const data = filteredStudents.map(s => ({ name: s.name, status: s.status }));
-    const count = data.filter(d => d.status).length;
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.innerHTML = '<i class="fa-solid fa-hourglass"></i> កំពុងស្នើ...';
+  submitBtn.disabled = true;
+  document.getElementById('resetBtn').disabled = true;
+  document.getElementById('dateInput').disabled = true;
+  document.getElementById('search').disabled = true;
+  document.getElementById('appOverlay').classList.add('show');
 
-    if (count === 0) {
-      showToast('មិនមានសិស្សអវត្តមានទេ!', 'warn');
-      return;
-    }
+  try {
+    await fetch(scriptURL, {
+      method: 'POST',
+      body: JSON.stringify({ month, day, attendance: data }),
+    });
 
-    const submitBtn = document.getElementById('submitBtn');
-    submitBtn.innerHTML = '<i class="fa-solid fa-hourglass"></i> កំពុងផ្ញើ...';
-    submitBtn.disabled = true;
-    document.getElementById('resetBtn').disabled = true;
-    document.getElementById('dateInput').disabled = true;
-    document.getElementById('search').disabled = true;
-    document.getElementById('appOverlay').classList.add('show');
+    submitBtn.classList.add('success');
+    submitBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> បានស្នើ';
+    await loadStudents(date);   // reload what is actually saved in the sheet
 
-    try {
-      await fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify({ month, day, attendance: data }),
-      });
-
-      submitBtn.classList.add('success');
-      submitBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> បានផ្ញើ';
-      resetForm();
-
-      setTimeout(() => {
-        submitBtn.classList.remove('success');
-        submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> ដាក់ស្នើ';
-        submitBtn.disabled = false;
-      }, 1800);
-    } catch (e) {
-      showToast('បញ្ជូនមិនបាន', 'error');
+    setTimeout(() => {
+      submitBtn.classList.remove('success');
       submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> ដាក់ស្នើ';
       submitBtn.disabled = false;
-    } finally {
-      document.getElementById('resetBtn').disabled = false;
-      document.getElementById('dateInput').disabled = false;
-      document.getElementById('search').disabled = false;
-      document.getElementById('appOverlay').classList.remove('show');
-    }
+    }, 1800);
+  } catch (e) {
+    showToast('បញ្ជូនមិនបាន', 'error');
+    submitBtn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> ដាក់ស្នើ';
+    submitBtn.disabled = false;
+  } finally {
+    document.getElementById('resetBtn').disabled = false;
+    document.getElementById('dateInput').disabled = false;
+    document.getElementById('search').disabled = false;
+    document.getElementById('appOverlay').classList.remove('show');
   }
+}
 
   window.onload = () => {
+    initDropdowns();
     const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
+    const todayStr = localToday();
     document.getElementById('dateInput').value = todayStr;
     loadStudents(todayStr);
   };
