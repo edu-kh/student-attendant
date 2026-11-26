@@ -505,6 +505,140 @@
     opacity:1;
     pointer-events:auto;
   }
+
+  /* ---------- Download popup ---------- */
+  .dl-overlay{
+    position:absolute; inset:0; z-index:60;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    background:rgba(19,36,54,0.48);
+    -webkit-backdrop-filter:blur(7px); backdrop-filter:blur(7px);
+    opacity:0; pointer-events:none;
+    transition:opacity .28s ease;
+  }
+  .dl-overlay.show{ opacity:1; pointer-events:auto; }
+
+  .dl-card{
+    --accent:var(--primary);
+    width:100%; max-width:320px;
+    padding:30px 22px 20px;
+    text-align:center;
+    background:var(--surface);
+    border-radius:26px;
+    box-shadow:0 28px 70px rgba(19,36,54,0.38);
+    transform:translateY(28px) scale(.9);
+    opacity:0;
+    transition:transform .45s cubic-bezier(.34,1.56,.64,1), opacity .3s ease;
+  }
+  .dl-overlay.show .dl-card{ transform:none; opacity:1; }
+  .dl-card.t-pdf{ --file:#d9534f; }
+  .dl-card.t-excel{ --file:#2e9e5c; }
+  .dl-card.is-success{ --accent:var(--present); }
+  .dl-card.is-error{ --accent:var(--absent); }
+
+  .dl-icon{ position:relative; width:104px; height:104px; margin:0 auto 20px; }
+  .dl-glow{
+    position:absolute; inset:-6px; border-radius:50%;
+    background:radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 70%);
+    animation:dlPulse 1.8s ease-in-out infinite;
+  }
+  .dl-card:not(.is-loading) .dl-glow{ animation:none; opacity:.8; }
+  @keyframes dlPulse{ 0%,100%{ transform:scale(.9); opacity:.6; } 50%{ transform:scale(1.12); opacity:1; } }
+
+  .dl-ring{ position:absolute; inset:4px; width:96px; height:96px; transition:opacity .25s ease; }
+  .dl-ring circle{ fill:none; stroke-width:5; }
+  .dl-ring .track{ stroke:#e7edf5; }
+  .dl-ring .arc{
+    stroke:url(#dlGrad); stroke-linecap:round;
+    stroke-dasharray:70 207;
+    transform-origin:50% 50%;
+    animation:dlSpin 1.1s cubic-bezier(.5,.15,.5,.85) infinite;
+  }
+  @keyframes dlSpin{ to{ transform:rotate(360deg); } }
+  .dl-card:not(.is-loading) .dl-ring{ opacity:0; }
+
+  .dl-file{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:2.3rem; color:var(--file);
+    animation:dlFloat 1.6s ease-in-out infinite;
+    transition:opacity .2s ease, transform .3s ease;
+  }
+  @keyframes dlFloat{ 0%,100%{ transform:translateY(2px); } 50%{ transform:translateY(-5px); } }
+  .dl-card:not(.is-loading) .dl-file{ opacity:0; transform:scale(.4); animation:none; }
+
+  .dl-badge{
+    position:absolute; inset:4px; width:96px; height:96px;
+    opacity:0; transform:scale(.3);
+  }
+  .dl-badge circle{ fill:var(--accent); }
+  .dl-badge path{
+    fill:none; stroke:#fff; stroke-width:6;
+    stroke-linecap:round; stroke-linejoin:round;
+    stroke-dasharray:80; stroke-dashoffset:80;
+  }
+  .dl-card.is-success .dl-badge.ok,
+  .dl-card.is-error .dl-badge.err{
+    opacity:1; transform:scale(1);
+    transition:transform .5s cubic-bezier(.34,1.56,.64,1), opacity .2s ease;
+  }
+  .dl-card.is-success .dl-badge.ok path,
+  .dl-card.is-error .dl-badge.err path{
+    animation:dlDraw .45s .25s ease forwards;
+  }
+  @keyframes dlDraw{ to{ stroke-dashoffset:0; } }
+  .dl-card.is-error .dl-icon{ animation:dlShake .5s .2s ease; }
+  @keyframes dlShake{
+    0%,100%{ transform:translateX(0); } 20%{ transform:translateX(-7px); } 40%{ transform:translateX(7px); }
+    60%{ transform:translateX(-4px); } 80%{ transform:translateX(4px); }
+  }
+
+  .dl-title{
+    margin:0 0 6px;
+    font-family:"Moul","Battambang",serif; font-weight:400;
+    font-size:0.98rem; line-height:1.6; color:var(--ink);
+  }
+  .dl-sub{ margin:0; font-size:0.86rem; line-height:1.6; color:var(--muted); min-height:1.4em; }
+  .dl-dots span{ display:inline-block; animation:dlDot 1.2s infinite both; }
+  .dl-dots span:nth-child(2){ animation-delay:.2s; }
+  .dl-dots span:nth-child(3){ animation-delay:.4s; }
+  @keyframes dlDot{ 0%,80%,100%{ opacity:.2; } 40%{ opacity:1; } }
+  .dl-card:not(.is-loading) .dl-dots{ display:none; }
+
+  .dl-progress{
+    display:flex; align-items:center; gap:10px;
+    margin-top:18px;
+    max-height:24px; overflow:hidden;
+    transition:max-height .3s ease, opacity .25s ease, margin .3s ease;
+  }
+  .dl-card:not(.is-loading) .dl-progress{ max-height:0; opacity:0; margin-top:0; }
+  .dl-bar{ flex:1; height:8px; border-radius:99px; background:#e7edf5; overflow:hidden; }
+  .dl-fill{
+    height:100%; width:0%; border-radius:99px;
+    background:linear-gradient(90deg, var(--primary), #3fb4cf, var(--gold));
+    background-size:200% 100%;
+    animation:dlShimmer 1.4s linear infinite;
+    transition:width .3s ease;
+  }
+  @keyframes dlShimmer{ to{ background-position:-200% 0; } }
+  .dl-pct{ min-width:38px; text-align:right; font-size:0.78rem; font-weight:700; color:var(--primary-dark); font-variant-numeric:tabular-nums; }
+
+  .dl-actions{ display:flex; gap:8px; margin-top:20px; }
+  .dl-btn{
+    flex:1; height:44px;
+    border-radius:99px; border:1.5px solid #dfe6ee;
+    background:var(--surface-soft); color:var(--ink);
+    font-family:inherit; font-size:0.88rem; cursor:pointer;
+    transition:transform .12s ease, background .18s ease;
+  }
+  .dl-btn:hover{ background:#e8eef6; }
+  .dl-btn:active{ transform:scale(.96); }
+  .dl-btn.primary{
+    border-color:transparent; color:#fff;
+    background:linear-gradient(155deg, var(--primary), var(--primary-dark));
+    box-shadow:0 6px 14px rgba(19,78,94,0.3);
+  }
+  .dl-btn[hidden]{ display:none; }
 </style>
 </head>
 <body>
@@ -521,10 +655,6 @@
           <i class="fa-regular fa-calendar leading"></i>
           <input type="date" id="dateInput" />
         </div>
-       <!--<a class="score-link" href="#">
-          <i class="fa-solid fa-chart-simple"></i> សម្រង់ពិន្ទុ
-        </a>
-          --> 
 
         <div class="dropdown">
           <button type="button" class="export-btn excel" onclick="toggleDropdown('excelMenu', event)" aria-label="នាំចេញ Excel">
@@ -563,7 +693,7 @@
       <button id="submitBtn" class="btn btn-submit" onclick="submitForm()">
         <i class="fa-regular fa-paper-plane"></i> ដាក់ស្នើ
       </button>
-      <a class="score-link" href="https://edu-kh.github.io/score/">
+      <a class="score-link" href="score.html">
         <i class="fa-solid fa-chart-simple"></i> សម្រង់ពិន្ទុ
       </a>
     </div>
@@ -571,6 +701,38 @@
     <div class="toast-layer" id="toastLayer"></div>
 
     <div class="app-overlay" id="appOverlay"></div>
+
+    <div class="dl-overlay" id="dlOverlay" role="dialog" aria-modal="true" aria-live="polite">
+      <div class="dl-card is-loading t-pdf" id="dlCard">
+        <div class="dl-icon">
+          <span class="dl-glow"></span>
+          <svg class="dl-ring" viewBox="0 0 96 96" aria-hidden="true">
+            <defs>
+              <linearGradient id="dlGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#1b6e82"/>
+                <stop offset="1" stop-color="#c79a3b"/>
+              </linearGradient>
+            </defs>
+            <circle class="track" cx="48" cy="48" r="44"/>
+            <circle class="arc" cx="48" cy="48" r="44"/>
+          </svg>
+          <i class="dl-file fa-solid fa-file-pdf" id="dlFileIcon"></i>
+          <svg class="dl-badge ok" viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="48" r="44"/><path d="M30 50 L43 63 L67 36"/></svg>
+          <svg class="dl-badge err" viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="48" r="44"/><path d="M35 35 L61 61 M61 35 L35 61"/></svg>
+        </div>
+        <h3 class="dl-title" id="dlTitle"></h3>
+        <p class="dl-sub"><span id="dlSub"></span><span class="dl-dots"><span>.</span><span>.</span><span>.</span></span></p>
+        <div class="dl-progress">
+          <div class="dl-bar"><div class="dl-fill" id="dlFill"></div></div>
+          <span class="dl-pct" id="dlPct">0%</span>
+        </div>
+        <div class="dl-actions">
+          <button type="button" class="dl-btn" id="dlCancel">បោះបង់</button>
+          <button type="button" class="dl-btn primary" id="dlRetry" hidden>ព្យាយាមម្តងទៀត</button>
+          <button type="button" class="dl-btn" id="dlClose" hidden>បិទ</button>
+        </div>
+      </div>
+    </div>
   </div>
 
 <script>
@@ -680,15 +842,113 @@
     return /FBAN|FBAV|FB_IAB|Instagram|Line\/|Zalo|MicroMessenger|; wv\)/i.test(navigator.userAgent);
   }
 
+  /* ---------- Download popup ---------- */
   let exporting = false;
+  let lastExport = null;
+  let userCancelled = false;
+  let activeCtrl = null;
+  let dlProgress = 0;
+  let dlTicker = null;
+  let dlAutoClose = null;
+
+  const dl = {
+    overlay: document.getElementById('dlOverlay'),
+    card: document.getElementById('dlCard'),
+    icon: document.getElementById('dlFileIcon'),
+    title: document.getElementById('dlTitle'),
+    sub: document.getElementById('dlSub'),
+    fill: document.getElementById('dlFill'),
+    pct: document.getElementById('dlPct'),
+    cancel: document.getElementById('dlCancel'),
+    retry: document.getElementById('dlRetry'),
+    close: document.getElementById('dlClose')
+  };
+
+  function dlState(state, title, sub) {
+    const type = (lastExport && lastExport.type) || 'pdf';
+    dl.card.className = 'dl-card is-' + state + ' t-' + type;
+    dl.title.textContent = title;
+    dl.sub.textContent = sub || '';
+    dl.cancel.hidden = state !== 'loading';
+    dl.retry.hidden = state !== 'error';
+    dl.close.hidden = state === 'loading';
+  }
+
+  function dlRender() {
+    const v = Math.min(100, Math.round(dlProgress));
+    dl.fill.style.width = v + '%';
+    dl.pct.textContent = v + '%';
+  }
+
+  function dlStartProgress() {
+    clearInterval(dlTicker);
+    dlProgress = 3;
+    dlRender();
+    // eases toward 92% and waits there until the server answers
+    dlTicker = setInterval(() => {
+      dlProgress += (92 - dlProgress) * 0.04;
+      dlRender();
+    }, 180);
+  }
+
+  function dlStopProgress() { clearInterval(dlTicker); dlTicker = null; }
+
+  function dlOpen(type, label, monthObj) {
+    const where = monthObj ? 'ខែ' + monthObj.km : 'ទាំងអស់';
+    clearTimeout(dlAutoClose);
+    dl.icon.className = 'dl-file fa-solid ' + (type === 'pdf' ? 'fa-file-pdf' : 'fa-file-excel');
+    dlState('loading', 'កំពុងរៀបចំឯកសារ', label + ' · ' + where);
+    dlStartProgress();
+    dl.overlay.classList.add('show');
+  }
+
+  function dlHide() {
+    clearTimeout(dlAutoClose);
+    dlStopProgress();
+    dl.overlay.classList.remove('show');
+  }
+
+  function dlSuccess(label, monthObj, inApp) {
+    dlStopProgress();
+    dlProgress = 100;
+    dlRender();
+    setTimeout(() => {
+      dlState('success', 'ទាញយកបានជោគជ័យ',
+        inApp ? 'បើមិនទាញយក សូមបើកក្នុង Chrome ឬ Safari'
+              : 'ឯកសារ ' + label + (monthObj ? ' ខែ' + monthObj.km : ' ទាំងអស់') + ' ត្រូវបានរក្សាទុក');
+      dlAutoClose = setTimeout(dlHide, inApp ? 5000 : 2200);
+    }, 350);
+  }
+
+  function dlFail(message) {
+    dlStopProgress();
+    dlState('error', 'ទាញយកមិនបាន', message);
+  }
+
+  dl.cancel.addEventListener('click', () => {
+    userCancelled = true;
+    if (activeCtrl) activeCtrl.abort();
+    dlHide();
+  });
+  dl.close.addEventListener('click', dlHide);
+  dl.retry.addEventListener('click', () => {
+    if (lastExport) handleExport(lastExport.type, lastExport.monthObj);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && dl.overlay.classList.contains('show')) {
+      (dl.cancel.hidden ? dl.close : dl.cancel).click();
+    }
+  });
 
   async function handleExport(type, monthObj) {
     document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('open'));
-    if (exporting) { showToast('កំពុងដំណើរការ សូមរង់ចាំ...', 'warn'); return; }
+    if (exporting) return;
     exporting = true;
+    userCancelled = false;
+    lastExport = { type, monthObj };
 
     const label = type === 'pdf' ? 'PDF' : 'Excel';
-    showToast('កំពុងរៀបចំទាញយក ' + label + ' ខែ' + monthObj.km + '...', 'success');
+    dlOpen(type, label, monthObj);
 
     // Khmer sheet name in `month`, English as a fallback in `monthEn`
     const exportURL = scriptURL +
@@ -698,6 +958,7 @@
       '&_=' + Date.now();
 
     const ctrl = ('AbortController' in window) ? new AbortController() : null;
+    activeCtrl = ctrl;
     const timer = ctrl ? setTimeout(() => ctrl.abort(), 120000) : null;
 
     try {
@@ -708,28 +969,24 @@
       try { file = JSON.parse(text); }
       catch (_) {
         // Google returned an HTML page (not deployed / not authorised)
-        showToast('Script មិនទាន់ Deploy ថ្មី ឬមិនទាន់អនុញ្ញាត', 'error');
+        dlFail('Script មិនទាន់ Deploy ថ្មី ឬមិនទាន់អនុញ្ញាត');
         return;
       }
 
       if (!file || !file.data) {
-        showToast((file && file.error) || 'ទាញយកមិនបាន', 'error');
+        dlFail((file && file.error) || 'ទាញយកមិនបាន');
         return;
       }
 
       const blob = base64ToBlob(file.data, file.mimeType);
       saveBlob(blob, file.filename || ('សម្រង់អវត្តមាន_ខែ' + monthObj.km + (type === 'pdf' ? '.pdf' : '.xlsx')));
-
-      showToast(
-        isInAppBrowser()
-          ? 'បើមិនទាញយក សូមបើកក្នុង Chrome ឬ Safari'
-          : 'បានទាញយក ' + label + ' ខែ' + monthObj.km,
-        isInAppBrowser() ? 'warn' : 'success'
-      );
+      dlSuccess(label, monthObj, isInAppBrowser());
     } catch (err) {
-      showToast(err && err.name === 'AbortError' ? 'ចំណាយពេលយូរពេក សូមព្យាយាមម្តងទៀត' : 'ទាញយកមិនបាន', 'error');
+      if (userCancelled) return;
+      dlFail(err && err.name === 'AbortError' ? 'ចំណាយពេលយូរពេក សូមព្យាយាមម្តងទៀត' : 'សូមពិនិត្យអ៊ីនធឺណិត ហើយព្យាយាមម្តងទៀត');
     } finally {
       if (timer) clearTimeout(timer);
+      activeCtrl = null;
       exporting = false;
     }
   }
@@ -918,7 +1175,6 @@ async function loadStudents(date) {
 
   window.onload = () => {
     initDropdowns();
-    const today = new Date();
     const todayStr = localToday();
     document.getElementById('dateInput').value = todayStr;
     loadStudents(todayStr);
